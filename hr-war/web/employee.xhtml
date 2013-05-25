@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+  <f:view contentType="text/html">
+    <h:head>
+      <f:facet name="first">
+        <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+        <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+        <title>Employee</title>
+      </f:facet>
+
+      
+
+      <style type="text/css">
+        .ui-layout-north {
+          z-index:20 !important;
+          overflow:visible !important;;
+        }
+
+        .ui-layout-north .ui-layout-unit-content {
+          overflow:visible !important;
+        }
+      </style>
+    </h:head>
+
+
+    <h:body>
+
+      <p:layout fullPage="true">
+
+        <p:layoutUnit id="top" position="north" size="50">
+
+          
+        </p:layoutUnit>
+
+        <p:layoutUnit id="bottom" position="south" size="10">
+
+        </p:layoutUnit>
+
+
+        <p:layoutUnit id="center" position="center">
+          <h:form id="empForm">
+            <h:panelGrid id="empGrid" columns="2" >  
+              <f:facet name="header">  
+
+              </f:facet>  
+
+              <h:outputLabel for="#{employeeBean.stdFields['FirstName'].name}" value="#{employeeBean.stdFields['FirstName'].label}:*" />
+              <p:inputText id="#{employeeBean.stdFields['FirstName'].name}" value="#{employeeBean.stdFields['FirstName'].valueStr}" label="firstName" required="#{employeeBean.stdFields['FirstName'].isRequired}" />
+
+              <h:outputLabel for="#{employeeBean.stdFields['LastName'].name}" value="#{employeeBean.stdFields['LastName'].label}:*" />
+              <p:inputText id="#{employeeBean.stdFields['LastName'].name}" value="#{employeeBean.stdFields['LastName'].valueStr}" label="lastName" required="#{employeeBean.stdFields['LastName'].isRequired}" />
+
+              <h:outputLabel for="#{employeeBean.stdFields['Address1'].name}" value="#{employeeBean.stdFields['Address1'].label}:*" />
+              <p:inputText id="#{employeeBean.stdFields['Address1'].name}" value="#{employeeBean.stdFields['Address1'].valueStr}" label="address1" required="#{employeeBean.stdFields['Address1'].isRequired}" />
+              
+              <h:outputLabel for="#{employeeBean.stdFields['Address2'].name}" value="#{employeeBean.stdFields['Address2'].label}:*" rendered="#{employeeBean.stdFields['Address2'].isVisible}"/>
+              <p:inputText id="#{employeeBean.stdFields['Address2'].name}" value="#{employeeBean.stdFields['Address2'].valueStr}" label="address2" required="#{employeeBean.stdFields['Address2'].isRequired}" rendered="#{employeeBean.stdFields['Address2'].isVisible}" />
+              
+              <h:outputLabel for="#{employeeBean.stdFields['City'].name}" value="#{employeeBean.stdFields['City'].label}:*" />
+              <p:inputText id="#{employeeBean.stdFields['City'].name}" value="#{employeeBean.stdFields['City'].valueStr}" label="city" required="#{employeeBean.stdFields['City'].isRequired}" />
+              
+              <h:outputLabel for="#{employeeBean.stdFields['Age'].name}" value="#{employeeBean.stdFields['Age'].label}:*" />
+              <p:inputText id="#{employeeBean.stdFields['Age'].name}" value="#{employeeBean.stdFields['Age'].valueStr}" label="age" required="#{employeeBean.stdFields['Age'].isRequired}">
+                <f:validateRegex pattern="^\d*$"/>
+              </p:inputText>
+              
+              <h:outputLabel for="#{employeeBean.stdFields['StartDate'].name}" value="#{employeeBean.stdFields['StartDate'].label}:*" />
+              <p:inputMask id="#{employeeBean.stdFields['StartDate'].name}" value="#{employeeBean.stdFields['StartDate'].valueStr}" label="age" required="#{employeeBean.stdFields['StartDate'].isRequired}" mask="#{employeeBean.stdFields['StartDate'].attributeMap['mask']}"  />
+              
+              <h:outputLabel for="#{employeeBean.stdFields['Phone'].name}" value="#{employeeBean.stdFields['Phone'].label}:*" />
+              <p:inputMask id="#{employeeBean.stdFields['Phone'].name}" value="#{employeeBean.stdFields['Phone'].valueStr}" label="age" required="#{employeeBean.stdFields['Phone'].isRequired}" mask="#{employeeBean.stdFields['Phone'].attributeMap['mask']}"  />
+
+              <h:outputLabel for="#{employeeBean.stdFields['Sex'].name}" value="#{employeeBean.stdFields['Sex'].label}:*" />
+              <p:selectOneRadio id="#{employeeBean.stdFields['Sex'].name}" label="Sex" requiredMessage="Please select an option" value="#{employeeBean.stdFields['Sex'].valueStr}" required="#{employeeBean.stdFields['Sex'].isRequired}" >
+                <f:selectItems id="id_si_#{employeeBean.stdFields['Sex'].name}" value="#{employeeBean.stdFields['Sex'].choiceList}"/>
+              </p:selectOneRadio>
+
+              <p:commandButton update="empGrid" value="Save" style="margin:0" actionListener="#{employeeBean.saveEmployee}"/> 
+              <f:facet name="footer">  
+                 
+              </f:facet>  
+            </h:panelGrid>
+
+
+
+          </h:form>
+
+
+        </p:layoutUnit>
+
+      </p:layout>
+
+
+
+    </h:body>
+
+  </f:view>
+</html>

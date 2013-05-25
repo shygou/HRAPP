@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:p="http://primefaces.org/ui">
+
+  <f:view contentType="text/html">
+
+
+    <h:head>
+      <script type="text/javascript">
+        function editLastDatatableRow(){
+
+          jQuery('.ui-datatable-data tr').last().find('span.ui-icon-pencil').each(function(){
+            jQuery(this).click()
+          });
+        }
+
+      </script>
+
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <title>Manage Module</title>
+    </h:head>
+    <h:body>
+      <h:form id="modForm">
+        <p:fieldset legend="Select Module and Tenant" style="cellpadding:5px">
+          <h:panelGrid columns="3" cellpadding="5" >
+
+            <h:outputLabel for="somMod" value="Module: "/>
+            <p:selectOneMenu id="somMod" label="Select Module" required="true" value="#{manageModuleBean.selModule}">
+              <f:selectItems id="siMods" value="#{manageModuleBean.modules}" var="module" itemLabel="#{module.name}" itemValue="#{module.id}"/>
+            </p:selectOneMenu>
+            <p:commandButton id="cbMod" value="Add" onclick="dlg.show()"/>
+            <h:outputLabel for="somTen" value="Tenant: "/>
+            <p:selectOneMenu id="somTen" label="Select Module" required="true" value="#{manageModuleBean.selTenant}">
+              <f:selectItems id="siTens" value="#{manageModuleBean.tenants}"  var="tenant" itemLabel="#{tenant.name}" itemValue="#{tenant.id}"/>
+            </p:selectOneMenu>
+            <p:commandButton id="cbTen" value="Add" onclick="dlg.show()"/>
+            <f:facet name="footer">
+              <p:commandButton id="cbSubmit" value="Submit" actionListener="#{manageModuleBean.getFieldsByTenantModule}" update=":tabModules:apMod:fieldList, :tabModules:apMod:tenantFieldList"/>
+            </f:facet>
+          </h:panelGrid>
+        </p:fieldset>
+      </h:form>
+      <p:spacer height="10"/>
+      <h:form id="tabModules">
+        <p:tabView id="apMod">
+          <p:tab title="Standard Fields">
+            <p:dataTable var="fields" value="#{manageModuleBean.fields}"  id="fieldList" >
+              <p:ajax event="rowEdit" update="@this" listener="#{manageModuleBean.onStdFieldEdit}" />
+              <f:facet name="header">
+
+              </f:facet>
+
+              <p:column headerText="Name" style="width:150px">
+
+                <h:outputText value="#{fields.name}" />
+
+              </p:column>
+
+              <p:column headerText="Label" style="width:150px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{fields.label}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{fields.label}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Type" style="width:150px">
+
+                <h:outputText value="#{fields.type}" />
+
+              </p:column>
+
+              <p:column headerText="Is Visible" style="width:100px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{fields.isVisible}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:selectOneMenu value="#{fields.isVisible}" style="width:100%">
+                      <f:selectItem itemLabel="True" itemValue="true" />  
+                      <f:selectItem itemLabel="False" itemValue="false" />   
+                    </p:selectOneMenu>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+              <p:column headerText="Is Required" style="width:100px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{fields.isRequired}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:selectOneMenu value="#{fields.isRequired}" style="width:100%">
+                      <f:selectItem itemLabel="True" itemValue="true" />  
+                      <f:selectItem itemLabel="False" itemValue="false" />   
+                    </p:selectOneMenu>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Choices" style="width:250px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{fields.choices}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{fields.choices}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Attributes" style="width:250px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{fields.attributes}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{fields.attributes}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Options">
+                <p:rowEditor />
+              </p:column>
+            </p:dataTable>
+          </p:tab>
+
+          <p:tab title="Tenant Specific Fields">
+            <p:toolbar>  
+              <p:toolbarGroup align="left">
+                <p:commandButton actionListener="#{manageModuleBean.addField}"   value="New" update="tenantFieldList" oncomplete="editLastDatatableRow();" icon="ui-icon-document"/>
+                <p:separator/>
+                <p:commandButton title="Delete" actionListener="#{manageModuleBean.delField}"  update="tenantFieldList" icon="ui-icon-trash"/>
+              </p:toolbarGroup>
+            </p:toolbar>
+            <p:dataTable selection="#{manageModuleBean.selField}" selectionMode="single" rowKey="#{tenFields.id}" var="tenFields" value="#{manageModuleBean.tenantFields}"  id="tenantFieldList" >
+              <p:ajax event="rowEdit" update="@this" listener="#{manageModuleBean.onCustomFieldEdit}" />
+
+
+              <p:column headerText="Name" style="width:150px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.name}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{tenFields.name}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Label" style="width:150px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.label}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{tenFields.label}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Type" style="width:150px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.type}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:selectOneMenu value="#{tenFields.type}" style="width:100%">
+                      <f:selectItem itemLabel="Text" itemValue="Text" />  
+                      <f:selectItem itemLabel="Radio" itemValue="Radio" />  
+                      <f:selectItem itemLabel="SelectOne" itemValue="SelectOne" />  
+                      <f:selectItem itemLabel="SelectMany" itemValue="SelectMany" />  
+                    </p:selectOneMenu>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Is Visible" style="width:100px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.isVisible}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:selectOneMenu value="#{tenFields.isVisible}" style="width:100%">
+                      <f:selectItem itemLabel="True" itemValue="true" />  
+                      <f:selectItem itemLabel="False" itemValue="false" />   
+                    </p:selectOneMenu>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+              <p:column headerText="Is Required" style="width:100px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.isRequired}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:selectOneMenu value="#{tenFields.isRequired}" style="width:100%">
+                      <f:selectItem itemLabel="True" itemValue="true" />  
+                      <f:selectItem itemLabel="False" itemValue="false" />   
+                    </p:selectOneMenu>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Choices" style="width:250px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.choices}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{tenFields.choices}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Attributes" style="width:250px">
+                <p:cellEditor>
+                  <f:facet name="output">
+                    <h:outputText value="#{tenFields.attributes}" />
+                  </f:facet>
+                  <f:facet name="input">
+                    <p:inputText value="#{tenFields.attributes}" style="width:100%"/>
+                  </f:facet>
+                </p:cellEditor>
+              </p:column>
+
+              <p:column headerText="Options">
+                <p:rowEditor />
+              </p:column>
+
+            </p:dataTable>
+
+          </p:tab>
+        </p:tabView>
+      </h:form>
+      <h:form id="dlgForm">
+        <p:dialog id="dlgMod" header="Add" widgetVar="dlg">
+          <h:outputLabel for="itMod" value="Name: "/>
+          <p:inputText id="itMod" value="#{manageModuleBean.name}" label="Name: " required="true"/>
+          <p:commandButton widgetVar="addMod" id="cbAddMod" value="Add" actionListener="#{manageModuleBean.addEntity}" update=":modForm" oncomplete="dlg.hide()"/>
+        </p:dialog>
+      </h:form>
+    </h:body>
+  </f:view>
+</html>

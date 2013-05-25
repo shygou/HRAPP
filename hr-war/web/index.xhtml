@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+  <h:head>
+    <title>Facelet Title</title>
+  </h:head>
+  <h:body>
+     <h:form id="empForm">
+            <h:panelGrid id="empGrid" columns="2">  
+              <f:facet name="header">  
+
+              </f:facet>  
+    <h:outputLabel for="test" value="label:*" />
+    <p:inputText id="test" value="#{tBean.vals}" label="firstName"/>
+
+              <p:commandButton update="empGrid" value="Save" style="margin:0" actionListener="#{tBean.hello}"/> 
+              <f:facet name="footer">  
+                 
+              </f:facet>  
+            </h:panelGrid>
+     </h:form>
+  </h:body>
+</html>
+
