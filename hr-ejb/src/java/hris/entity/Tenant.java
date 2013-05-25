@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author gouri
+ * @author Someone that is brand new
  */
 @Entity
 @Table(name = "tenant")
